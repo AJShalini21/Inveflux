@@ -1,0 +1,84 @@
+<svg width="1200" height="480" viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample profit flow (revenue to profit)">
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0B4B86" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#BA94DA" stop-opacity="0.92" />
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#BA94DA" stop-opacity="0.10" />
+      <stop offset="60%" stop-color="#0B4B86" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.0" />
+    </radialGradient>
+    <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#0f172a" opacity="0.04" />
+    </pattern>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="320" fill="url(#glow)" />
+  <rect x="0" y="0" width="900" height="320" fill="url(#dots)" />
+
+  <!-- Layout constants (mirrors the in-app component) -->
+  <!-- bars: left=140, revenue=360, right=760, top=70, H=180, W=14 -->
+
+  <!-- Values (example): revenue=10.0M; cash=45%; digital=55%; COGS=6.2M; Opex=1.4M; Net Profit=2.4M -->
+  <!-- Heights in px: barH=180; cash=81; digital=99; profit=43.2; opex=25.2; cogs=111.6 -->
+
+  <!-- Ribbons -->
+  <path d="M 154 70 C 257 70 257 70 360 70 L 360 151 C 257 151 257 151 154 151 Z" fill="rgba(239, 68, 68, 0.28)" />
+  <path d="M 154 151 C 257 151 257 151 360 151 L 360 250 C 257 250 257 250 154 250 Z" fill="rgba(34, 197, 94, 0.25)" />
+
+  <path d="M 374 70 C 567 70 567 70 760 70 L 760 113.2 C 567 113.2 567 113.2 374 113.2 Z" fill="rgba(34, 197, 94, 0.30)" />
+  <path d="M 374 113.2 C 567 113.2 567 113.2 760 113.2 L 760 138.4 C 567 138.4 567 138.4 374 138.4 Z" fill="rgba(245, 158, 11, 0.26)" />
+  <path d="M 374 138.4 C 567 138.4 567 138.4 760 138.4 L 760 250 C 567 250 567 250 374 250 Z" fill="rgba(239, 68, 68, 0.26)" />
+
+  <!-- Bars -->
+  <rect x="140" y="70" width="14" height="81" rx="7" fill="#ef4444" opacity="0.9" />
+  <rect x="140" y="151" width="14" height="99" rx="7" fill="#22c55e" opacity="0.9" />
+
+  <rect x="360" y="70" width="14" height="180" rx="7" fill="url(#accent)" />
+
+  <rect x="760" y="70" width="14" height="43.2" rx="7" fill="#22c55e" opacity="0.95" />
+  <rect x="760" y="113.2" width="14" height="25.2" rx="7" fill="#f59e0b" opacity="0.95" />
+  <rect x="760" y="138.4" width="14" height="111.6" rx="7" fill="#ef4444" opacity="0.95" />
+
+  <!-- Divider (Gross Margin boundary) -->
+  <line x1="354" x2="380" y1="138.4" y2="138.4" stroke="#0f172a" stroke-opacity="0.10" stroke-width="1" />
+
+  <!-- Labels -->
+  <g font-family="Raleway, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" fill="#0f172a">
+    <text x="128" y="110" text-anchor="end" font-size="12">
+      <tspan font-weight="700">Cash</tspan>
+      <tspan fill="#64748b" font-weight="600"> 45.0%</tspan>
+      <tspan x="128" dy="14" fill="#64748b" font-size="11">$4.5M</tspan>
+    </text>
+    <text x="128" y="205" text-anchor="end" font-size="12">
+      <tspan font-weight="700">Digital</tspan>
+      <tspan fill="#64748b" font-weight="600"> 55.0%</tspan>
+      <tspan x="128" dy="14" fill="#64748b" font-size="11">$5.5M</tspan>
+    </text>
+
+    <text x="367" y="52" text-anchor="middle" font-size="12">
+      <tspan font-weight="800">TOTAL REVENUE</tspan>
+      <tspan x="367" dy="14" fill="#64748b" font-size="11" font-weight="700">$10.0M</tspan>
+    </text>
+
+    <text x="788" y="94" font-size="12">
+      <tspan font-weight="800">Net Profit</tspan>
+      <tspan x="788" dy="14" fill="#64748b" font-size="11">$2.4M</tspan>
+    </text>
+    <text x="788" y="128" font-size="12">
+      <tspan font-weight="800">Other Expenses</tspan>
+      <tspan x="788" dy="14" fill="#64748b" font-size="11">$1.4M</tspan>
+    </text>
+    <text x="788" y="205" font-size="12">
+      <tspan font-weight="800">COGS</tspan>
+      <tspan x="788" dy="14" fill="#64748b" font-size="11">$6.2M</tspan>
+    </text>
+
+    <text x="484" y="118" text-anchor="middle" font-size="11" fill="#334155">
+      <tspan font-weight="800">GROSS MARGIN</tspan>
+      <tspan x="484" dy="14" fill="#64748b" font-size="11" font-weight="700">$3.8M (38.0%)</tspan>
+    </text>
+  </g>
+</svg>
+

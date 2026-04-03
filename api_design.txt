@@ -1,0 +1,837 @@
+# API Design
+Please outline the main API endpoints, request/response formats, and any specific logic needed.
+
+API Design
+
+Operational
+
+Reorder Alerts
+
+GET /api/v1/insights/operational/reorder-alerts
+
+Query:
+
+?category=Snacks
+
+Logic:
+
+current_stock <= reorder_level
+
+Response:
+
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "category": "Dairy",
+      "currentStock": 20,
+      "reorderLevel": 30,
+      "alertLevel": "RED", 
+      "stockCoverageDays": 4.5
+    }
+  ]
+}
+
+Alert logic suggestion:
+
+RED    -> current_stock <= reorder_level
+YELLOW -> current_stock <= reorder_level * 1.2
+GREEN  -> otherwise
+
+
+2️⃣ Top 10 Products
+
+GET /api/v1/insights/operational/top-products
+
+Query:
+
+?metric=revenue
+?metric=quantity
+?startDate=2025-01-01&endDate=2025-01-31
+
+Logic:
+
+SUM(selling_price * quantity) OR SUM(quantity)
+GROUP BY product_id
+ORDER BY metric DESC
+LIMIT 10
+
+Response:
+
+{
+  "metric": "revenue",
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "category": "Dairy",
+      "totalRevenue": 54000,
+      "totalQuantity": 320
+    }
+  ]
+}
+
+
+3️⃣ Category Performance
+
+GET /api/v1/insights/operational/category-performance
+
+Query:
+
+?startDate=2025-01-01&endDate=2025-01-31
+
+Logic:
+
+JOIN sales_items -> products
+GROUP BY category
+SUM(selling_price * quantity)
+
+Response:
+
+{
+  "data": [
+    {
+      "category": "Dairy",
+      "totalRevenue": 120000,
+      "percentageContribution": 34.5
+    }
+  ]
+}
+
+
+4️⃣ Monthly Sales Trend
+
+GET /api/v1/insights/operational/monthly-sales-trend
+
+Query:
+
+?startDate=2024-01-01&endDate=2025-01-31
+
+Logic:
+
+GROUP BY YEAR(sales_date), MONTH(sales_date)
+SUM(selling_price * quantity)
+
+Response:
+
+{
+  "data": [
+    {
+      "month": "2025-01",
+      "totalRevenue": 240000
+    }
+  ]
+}
+
+
+5️⃣ Operational Efficiency Trend
+(Stock Coverage / Alerts Over Time)
+
+GET /api/v1/insights/operational/efficiency-trend
+
+Query:
+
+?startDate=2025-01-01&endDate=2025-03-01
+
+Logic idea:
+* Track number of RED alerts per dayOR
+* Avg stock coverage per month
+Response:
+
+{
+  "data": [
+    {
+      "period": "2025-01",
+      "redAlertsCount": 12,
+      "avgStockCoverageDays": 6.2
+    }
+  ]
+}
+
+
+6️⃣ Optional Details Table
+
+GET /api/v1/insights/operational/details
+
+Query:
+
+?page=1&pageSize=20
+&category=Dairy
+&alertLevel=RED
+&startDate=2025-01-01&endDate=2025-01-31
+
+Response:
+
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "category": "Dairy",
+      "currentStock": 20,
+      "reorderLevel": 30,
+      "avgDailySales": 4.3,
+      "stockCoverageDays": 4.5,
+      "alertLevel": "RED"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "totalRecords": 120
+  }
+}
+
+
+7️⃣ Global Date Range Handling
+All operational APIs should accept:
+
+?startDate=
+&endDate=
+
+Apply filtering on:
+* sales_items.sales_date
+* purchase_orders.order_date (if needed)
+* inventory_ledger.transaction_date (if needed)
+
+Final Structure for Operational Page
+
+GET /insights/operational/reorder-alerts
+GET /insights/operational/top-products
+GET /insights/operational/category-performance
+GET /insights/operational/monthly-sales-trend
+GET /insights/operational/efficiency-trend
+GET /insights/operational/details
+
+
+
+/api/v1/insights/inventory
+All read-only aggregation.All support:
+
+?startDate=
+&endDate=
+&category=
+&productId=
+
+Inventory
+
+1️⃣ Stock Pulse (Current Inventory Health)
+Endpoint
+
+GET /api/v1/insights/inventory/stock-pulse
+
+Covers
+* Total Inventory Value
+* Low Stock Count
+* Out of Stock Count
+* Overstocked Count
+* Category Value Contribution
+Response
+
+{
+  "summary": {
+    "totalInventoryValue": 1250000,
+    "totalUnits": 8420,
+    "lowStockCount": 18,
+    "outOfStockCount": 5,
+    "overstockedCount": 12
+  },
+  "distribution": {
+    "healthy": 120,
+    "lowStock": 18,
+    "outOfStock": 5,
+    "overstocked": 12
+  },
+  "categoryValueContribution": [
+    {
+      "category": "Dairy",
+      "inventoryValue": 340000,
+      "percentage": 27.2
+    }
+  ],
+  "topValueProducts": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "inventoryValue": 54000
+    }
+  ]
+}
+
+
+2️⃣ DIO Gauge (Inventory Efficiency Health)
+Endpoint
+
+GET /api/v1/insights/inventory/dio-health
+
+Covers
+* Inventory Turnover
+* DIO
+* Dead Stock %
+* Overstock %
+Response
+
+{
+  "inventoryTurnover": 4.2,
+  "dio": 86.9,
+  "deadStockPercentage": 12.4,
+  "overstockPercentage": 9.8,
+  "healthStatus": "YELLOW"
+}
+
+Health logic (example):
+
+GREEN  -> DIO < 60
+YELLOW -> 60–90
+RED    -> > 90
+
+
+3️⃣ Inventory Velocity (Movement Efficiency)
+Endpoint
+
+GET /api/v1/insights/inventory/velocity
+
+Query
+
+?groupBy=product
+or
+?groupBy=category
+
+Response
+
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "turnover": 5.3,
+      "sellThroughRate": 0.72,
+      "stockCoverageDays": 14.5,
+      "velocityScore": 3.9
+    }
+  ]
+}
+
+Velocity formula:
+
+velocity =
+0.4 * turnover +
+0.4 * sellThrough +
+0.2 * (1 / stockCoverage)
+
+
+4️⃣ Inventory Aging Buckets
+Endpoint
+
+GET /api/v1/insights/inventory/aging
+
+Response
+
+{
+  "buckets": [
+    { "range": "0-30", "quantity": 3200, "value": 240000 },
+    { "range": "31-60", "quantity": 2100, "value": 180000 },
+    { "range": "61-90", "quantity": 900, "value": 72000 },
+    { "range": "90+", "quantity": 600, "value": 50000 }
+  ]
+}
+
+
+5️⃣ Trend History (Over Time)
+Endpoint
+
+GET /api/v1/insights/inventory/trends
+
+Query
+
+?interval=monthly
+
+Response
+
+{
+  "data": [
+    {
+      "period": "2025-01",
+      "deadStockPercentage": 10.2,
+      "dio": 78.4,
+      "velocityScore": 3.6
+    }
+  ]
+}
+
+
+6️⃣ Risk Highlights (Optional Table)
+Endpoint
+
+GET /api/v1/insights/inventory/risk-products
+
+Query
+
+?type=lowStock
+?type=deadStock
+?type=overstock
+&page=1&pageSize=20
+
+Response
+
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "category": "Dairy",
+      "currentStock": 10,
+      "reorderLevel": 25,
+      "deadStockValue": 1200,
+      "riskType": "LOW_STOCK"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "totalRecords": 42
+  }
+}
+
+
+Final Clean Inventory Insights API Map
+
+GET /insights/inventory/stock-pulse
+GET /insights/inventory/dio-health
+GET /insights/inventory/velocity
+GET /insights/inventory/aging
+GET /insights/inventory/trends
+GET /insights/inventory/risk-products
+
+
+Financial 
+
+## `/api/v1/insights/financial`
+
+All read-only aggregation.
+All support:
+
+```id="ezx2wp"
+?startDate=
+&endDate=
+&productId=
+&category=
+```
+
+---
+
+# 1️⃣ Total Revenue
+
+```id="l5b2zi"
+GET /api/v1/insights/financial/total-revenue
+```
+
+Response:
+
+```json id="v1n0sk"
+{
+  "totalRevenue": 540000,
+  "totalOrders": 1200
+}
+```
+
+---
+
+# 2️⃣ COGS
+
+```id="6a0ktv"
+GET /api/v1/insights/financial/cogs
+```
+
+Logic: Quantity Sold × AvgUnitCost
+
+Response:
+
+```json id="r6d4pg"
+{
+  "totalCOGS": 320000
+}
+```
+
+---
+
+# 3️⃣ Gross Margin
+
+```id="0qlh4z"
+GET /api/v1/insights/financial/gross-margin
+```
+
+Response:
+
+```json id="k4v9pw"
+{
+  "grossMargin": 220000,
+  "grossMarginPercentage": 40.7
+}
+```
+
+---
+
+# 4️⃣ Net Profit
+
+```id="8yx7df"
+GET /api/v1/insights/financial/net-profit
+```
+
+Response:
+
+```json id="wz7hgj"
+{
+  "netProfit": 220000
+}
+```
+
+---
+
+# 5️⃣ Average Order Value (AOV)
+
+```id="0gr8xc"
+GET /api/v1/insights/financial/average-order-value
+```
+
+Response:
+
+```json id="s2p1vl"
+{
+  "averageOrderValue": 450
+}
+```
+
+---
+
+# 6️⃣ Revenue Contribution by Product
+
+```id="n5c2rx"
+GET /api/v1/insights/financial/product-contribution
+```
+
+Response:
+
+```json id="v8d7pz"
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "revenue": 54000,
+      "percentageOfTotal": 10
+    }
+  ]
+}
+```
+
+---
+
+# 7️⃣ Cash vs Digital %
+
+```id="p9b3yt"
+GET /api/v1/insights/financial/payment-mix
+```
+
+Response:
+
+```json id="x0r6kp"
+{
+  "cashPercentage": 60,
+  "digitalPercentage": 40
+}
+```
+
+---
+
+# 8️⃣ Revenue Trends / Growth
+
+```id="k2m4bg"
+GET /api/v1/insights/financial/revenue-trends
+```
+
+Query:
+
+```id="v5s7hz"
+?interval=daily|weekly|monthly
+```
+
+Response:
+
+```json id="q1n9lw"
+{
+  "data": [
+    { "date": "2025-01-01", "revenue": 12000 },
+    { "date": "2025-01-02", "revenue": 15000 }
+  ]
+}
+```
+
+---
+
+# 9️⃣ Product Contribution vs Profitability
+
+```id="m9w2xz"
+GET /api/v1/insights/financial/product-profitability
+```
+
+Response:
+
+```json id="t8k4jq"
+{
+  "data": [
+    {
+      "productId": 101,
+      "productName": "Milk",
+      "revenueContribution": 10,
+      "grossMarginPercentage": 45,
+      "revenueValue": 54000
+    }
+  ]
+}
+```
+
+---
+
+# 10️⃣ Order Size Distribution / AOV Spread
+
+```id="r3v9ny"
+GET /api/v1/insights/financial/order-size-distribution
+```
+
+Response:
+
+```json id="d5k8mz"
+{
+  "data": [
+    { "range": "0-100", "orderCount": 200 },
+    { "range": "101-500", "orderCount": 700 },
+    { "range": "501-1000", "orderCount": 250 }
+  ]
+}
+```
+
+---
+
+# 11️⃣ Payment Mix Over Time
+
+```id="k1p8qw"
+GET /api/v1/insights/financial/payment-trends
+```
+
+Query:
+
+```id="b2v5xz"
+?interval=daily|weekly|monthly
+```
+
+Response:
+
+```json id="h7r4tz"
+{
+  "data": [
+    { "date": "2025-01-01", "cash": 8000, "digital": 5000 }
+  ]
+}
+```
+
+---
+
+# 12️⃣ Top vs Bottom Revenue Products
+
+```id="w3y8qx"
+GET /api/v1/insights/financial/top-bottom-products
+```
+
+Query:
+
+```id="s9d7kp"
+?topPercent=20
+```
+
+Response:
+
+```json id="n4v6yr"
+{
+  "topProducts": [
+    { "productId": 101, "productName": "Milk", "revenue": 54000 }
+  ],
+  "bottomProducts": [
+    { "productId": 205, "productName": "Butter", "revenue": 1200 }
+  ]
+}
+```
+
+---
+
+# Final Financial Insights API Map
+
+```id="t5z8kj"
+GET /financial/total-revenue
+GET /financial/cogs
+GET /financial/gross-margin
+GET /financial/net-profit
+GET /financial/average-order-value
+GET /financial/product-contribution
+GET /financial/payment-mix
+GET /financial/revenue-trends
+GET /financial/product-profitability
+GET /financial/order-size-distribution
+GET /financial/payment-trends
+GET /financial/top-bottom-products
+```
+
+Next: Vendor Insights.
+
+Vendor
+
+/api/v1/insights/vendors
+All read-only aggregation.Support:
+
+?startDate=
+&endDate=
+&vendorId=
+
+
+1️⃣ Total Vendor Payables
+
+GET /api/v1/insights/vendors/total-payables
+
+Response:
+
+{
+  "totalPayables": 320000
+}
+
+
+2️⃣ Average Payment Delay
+
+GET /api/v1/insights/vendors/average-payment-delay
+
+Logic: Avg(PaymentDate – DueDate)
+Response:
+
+{
+  "averageDelayDays": 12.5
+}
+
+
+3️⃣ % Late Vendor Payments
+
+GET /api/v1/insights/vendors/late-payment-percent
+
+Logic: (Late Payments / Total Payments) × 100
+Response:
+
+{
+  "latePaymentPercentage": 28.4
+}
+
+
+4️⃣ Vendor Purchase Share %
+
+GET /api/v1/insights/vendors/purchase-share
+
+Response:
+
+{
+  "data": [
+    {
+      "vendorId": 201,
+      "vendorName": "ABC Suppliers",
+      "purchaseAmount": 120000,
+      "percentageOfTotal": 15.6
+    }
+  ]
+}
+
+
+5️⃣ Average Lead Time vs Expected
+
+GET /api/v1/insights/vendors/lead-time
+
+Logic:ActualLeadTime = firstInventoryReceipt - orderDateLeadTimeVariance = Actual - Expected (from Purchase Window → Category)
+Response:
+
+{
+  "vendorId": 201,
+  "vendorName": "ABC Suppliers",
+  "avgActualLeadTimeDays": 7.5,
+  "avgExpectedLeadTimeDays": 5,
+  "varianceDays": 2.5,
+  "status": "RED"
+}
+
+
+6️⃣ Vendor Performance Table
+
+GET /api/v1/insights/vendors/performance
+
+Response:
+
+{
+  "data": [
+    {
+      "vendorId": 201,
+      "vendorName": "ABC Suppliers",
+      "totalPayables": 120000,
+      "avgPaymentDelay": 12.5,
+      "latePaymentPercentage": 28.4,
+      "avgLeadTimeVariance": 2.5,
+      "status": "RED"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "totalRecords": 25
+  }
+}
+
+
+7️⃣ Trends / Reliability Charts
+Lead Time vs Expected Over Time
+
+GET /api/v1/insights/vendors/lead-time-trends
+
+Response:
+
+{
+  "data": [
+    {
+      "period": "2025-01",
+      "vendorId": 201,
+      "actualLeadTime": 7,
+      "expectedLeadTime": 5,
+      "variance": 2
+    }
+  ]
+}
+
+Payment Delay Trends
+
+GET /api/v1/insights/vendors/payment-delay-trends
+
+Response:
+
+{
+  "data": [
+    {
+      "period": "2025-01",
+      "vendorId": 201,
+      "avgDelayDays": 12
+    }
+  ]
+}
+
+
+Final Vendor Insights API Map
+
+GET /vendors/total-payables
+GET /vendors/average-payment-delay
+GET /vendors/late-payment-percent
+GET /vendors/purchase-share
+GET /vendors/lead-time
+GET /vendors/performance
+GET /vendors/lead-time-trends
+GET /vendors/payment-delay-trends
+
+Next: Data Upload section.

@@ -1,0 +1,17 @@
+# ER Diagram & Database Schema
+Please describe the table structures, relationships, and PostgreSQL requirements here.
+products: ['product_id', 'vendor_id', 'product_name', 'category', 'buying_price']
+vendors: ['vendor_id', 'vendor_name', 'address', 'contact_person', 'email', 'contact_number', 'payment_terms']
+purchase_orders: ['purchase_order_id', 'vendor_id', 'order_date', 'total_amount', 'due_date', 'paid_amount', 'remaining_amount', 'payment_status']
+purchase_order_items: ['purchase_order_item_id', 'purchase_order_id', 'product_id', 'quantity_ordered', 'buying_price', 'line_total']
+sales_header: ['sales_id', 'sales_date', 'total_amount', 'payment_type']
+sales_items: ['sales_item_id', 'sales_id', 'product_id', 'sales_date', 'selling_price', 'quantity', 'line_total']
+vendor_payments: ['payment_id', 'vendor_id', 'payment_date', 'payment_total', 'payment_type']
+purchase_order_payment: ['purchase_order_id', 'vendor_id', 'payment_id', 'due_date', 'payment_date', 'amount_paid', 'payment_type']
+inventory_ledger: ['product_id', 'transaction_type', 'reference_id', 'quantity_in', 'quantity_out', 'unit_cost', 'transaction_date']
+product_summary: ['product_id', 'total_purchased', 'total_sold', 'current_stock', 'usable_stock', 'dead_stock_qty', 'inventory_value']
+reorder_level: ['product_id', 'reorder_level', 'safety_stock']
+inventory_aging: ['product_id', 'purchase_order_id', 'buying_price', 'purchase_date', 'quantity_in', 'remaining_qty', 'stock_age_days', 'is_dead_stock']
+category_master: ['category_name', 'shelf_life_days', 'dead_stock_threshold_days']
+purchase_window: ['category_name', 'week_days', 'monthly_occurrences', 'notes']
+

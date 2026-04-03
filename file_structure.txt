@@ -1,0 +1,171 @@
+# File Structure
+Please specify the preferred directory layout for the project (e.g., backend/, frontend/, shared/, etc.).
+
+backend/
+│
+├── pom.xml                  # Maven dependencies
+├── application.properties   # Spring Boot config (DB URL, port, etc.)
+├── Application.java         # Main Spring Boot application
+│
+├── config/                  # Configurations
+│   ├── DatabaseConfig.java  # Optional DB configs
+│   └── SwaggerConfig.java   # API docs if using Swagger/OpenAPI
+│
+├── controller/              # REST Controllers
+│   ├── OperationalController.java
+│   ├── InventoryController.java
+│   ├── FinancialController.java
+│   ├── VendorController.java
+│   └── UploadController.java
+│
+├── service/                 # Business logic
+│   ├── OperationalService.java
+│   ├── InventoryService.java
+│   ├── FinancialService.java
+│   ├── VendorService.java
+│   └── UploadService.java
+│
+├── repository/              # JPA Repositories
+│   ├── ProductRepository.java
+│   ├── VendorRepository.java
+│   ├── PurchaseOrderRepository.java
+│   ├── PurchaseOrderItemRepository.java
+│   ├── SalesHeaderRepository.java
+│   ├── SalesItemRepository.java
+│   ├── VendorPaymentRepository.java
+│   ├── InventoryLedgerRepository.java
+│   └── ProductSummaryRepository.java
+│
+├── model/entity/            # JPA Entity classes
+│   ├── Product.java
+│   ├── Vendor.java
+│   ├── PurchaseOrder.java
+│   ├── PurchaseOrderItem.java
+│   ├── SalesHeader.java
+│   ├── SalesItem.java
+│   ├── VendorPayment.java
+│   ├── InventoryLedger.java
+│   └── ProductSummary.java
+│
+├── dto/                     # Data Transfer Objects
+│   ├── OperationalDTO.java
+│   ├── InventoryDTO.java
+│   ├── FinancialDTO.java
+│   └── VendorDTO.java
+│
+├── util/                    # Helper classes
+│   ├── DateUtils.java
+│   ├── MathUtils.java
+│   └── ResponseFormatter.java
+│
+├── exception/               # Custom exceptions
+│   ├── ApiException.java
+│   └── GlobalExceptionHandler.java
+│
+└── test/
+    ├── unit/
+    │   ├── OperationalServiceTest.java
+    │   └── InventoryServiceTest.java
+    └── integration/
+        └── ApiIntegrationTest.java
+
+
+frontend/
+│
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── .env
+│
+├── public/                     # Static assets
+│   └── logo.png
+│
+├── src/
+│   ├── main.tsx                # React entry
+│   ├── App.tsx                 # Main app layout, routes
+│   ├── index.css               # Global styles
+│
+│   ├── api/                    # API calls / service layer
+│   │   ├── axiosConfig.ts      # Axios base URL, interceptors
+│   │   ├── operationalApi.ts
+│   │   ├── inventoryApi.ts
+│   │   ├── financialApi.ts
+│   │   ├── vendorApi.ts
+│   │   └── uploadApi.ts
+│
+│   ├── components/             # Reusable UI components
+│   │   ├── charts/             # Chart components (Line, Bar, Donut, Gauge)
+│   │   ├── tables/             # Table components
+│   │   ├── cards/              # KPI / summary cards
+│   │   ├── filters/            # Date pickers, dropdowns
+│   │   └── common/             # Buttons, modals, tooltips, etc.
+│
+│   ├── pages/                  # Each dashboard page
+│   │   ├── OperationalInsights/
+│   │   │   ├── OperationalPage.tsx
+│   │   │   ├── OperationalWidgets.tsx
+│   │   │   └── OperationalStyles.module.css
+│   │   ├── InventoryInsights/
+│   │   │   ├── InventoryPage.tsx
+│   │   │   ├── InventoryWidgets.tsx
+│   │   │   └── InventoryStyles.module.css
+│   │   ├── FinancialInsights/
+│   │   │   ├── FinancialPage.tsx
+│   │   │   ├── FinancialWidgets.tsx
+│   │   │   └── FinancialStyles.module.css
+│   │   ├── VendorInsights/
+│   │   │   ├── VendorPage.tsx
+│   │   │   ├── VendorWidgets.tsx
+│   │   │   └── VendorStyles.module.css
+│   │   └── DataUpload/
+│   │       ├── UploadPage.tsx
+│   │       └── UploadForm.tsx
+│
+│   ├── store/                  # Global state (Redux / Zustand / Context)
+│   │   ├── index.ts
+│   │   ├── operationalSlice.ts
+│   │   ├── inventorySlice.ts
+│   │   ├── financialSlice.ts
+│   │   └── vendorSlice.ts
+│
+│   ├── hooks/                  # Custom hooks
+│   │   ├── useFetch.ts
+│   │   ├── useDebounce.ts
+│   │   └── useDateRange.ts
+│
+│   ├── types/                  # TypeScript types
+│   │   ├── operational.ts
+│   │   ├── inventory.ts
+│   │   ├── financial.ts
+│   │   └── vendor.ts
+│
+│   ├── utils/                  # Helper functions
+│   │   ├── dateUtils.ts
+│   │   ├── mathUtils.ts
+│   │   └── formatters.ts
+│
+│   └── routes/                 # Route definitions
+│       ├── AppRoutes.tsx
+│       └── ProtectedRoute.tsx  # For future authentication
+│
+└── tests/
+    ├── unit/
+    │   ├── components/
+    │   └── utils/
+    └── integration/
+        └── pages/
+
+src/
+│
+├── theme/ # Global styles, constants, design tokens
+│ ├── colors.ts # e.g., export const PRIMARY = '#1F2937';
+│ ├── fonts.ts # Font families, sizes
+│ ├── spacing.ts # Margins, paddings
+│ ├── breakpoints.ts # For responsive design
+│ └── zIndex.ts # Layering order
+│
+├── constants/ # Non-theme constants
+│ ├── apiEndpoints.ts # e.g., export const FINANCIAL_API = '/api/v1/insights/financial';
+│ ├── routes.ts # Frontend routes
+│ ├── tableColumns.ts # Column definitions for tables
+│ └── metrics.ts # Metric IDs / labels used across pages

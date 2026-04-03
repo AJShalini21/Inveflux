@@ -1,0 +1,4 @@
+# UI Layout
+Please describe the main screens, components, and layout requirements here.
+
+I have screenshots also for this. I'll provide those details when we move to UI

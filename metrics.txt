@@ -1,0 +1,131 @@
+Inventory Insights
+
+1. Total Inventory Value
+Formula:Sum(CurrentStock × AvgUnitCost)
+Data From:Product Summary → CurrentStock, AvgUnitCost
+
+2. Total Units in Stock
+Formula:Sum(CurrentStock)
+Data From:Product Summary → CurrentStock
+
+3. Low Stock Products
+Formula:CurrentStock < ReorderThreshold
+Data From:Product Summary → CurrentStock(Product master if threshold stored separately)
+
+4. Out of Stock
+Formula:CurrentStock = 0
+Data From:Product Summary → CurrentStock
+
+5. Overstocked Products
+Formula:CurrentStock > (Avg Daily Sales × X days)
+Data From:Sales → Quantity, DateProduct Summary → CurrentStock
+
+6. Dead Stock
+Formula:DeadStockValue = DeadStockQty × AvgUnitCost
+Data From:Product Summary → DeadStockQty, AvgUnitCost
+
+
+7. Inventory Aging
+Formula:Group stock by age buckets (0–30, 31–60, 61–90, >90 days)
+Data From:Inventory Aging Table →
+* ProductId
+* AgeDays
+* StockQty
+
+8. Inventory Turnover
+Formula:COGS (Last 12 months) / Avg Inventory (Last 12 months)
+Data From:PurchaseOrderItems → COGSProduct Summary → InventoryValue
+
+9. Days Inventory Outstanding (DIO)
+Formula:365 / Inventory Turnover
+Data From:Uses Inventory Turnover result
+
+10. Stock Coverage (Days)
+Formula:CurrentStock / Avg Daily Sales
+Data From:Product Summary → CurrentStockSales → Quantity, Date
+
+11. Sell-Through Rate
+Formula:TotalSold / TotalPurchased
+Data From:Product Summary → TotalSold, TotalPurchased
+
+
+Financial Insights
+12. Total Revenue
+Formula:Sum(SellingPrice × Quantity)
+Data From:Sales → SellingPrice, Quantity
+
+13. COGS
+Formula:Total COGS = Sum(COGS)
+Data From:PurchaseOrderItems → COGS
+If rebuilding logically:COGS = Quantity Sold × Buying Price (or AvgUnitCost)
+Would use:Sales → QuantityProduct Summary → AvgUnitCost
+
+14. Gross Margin
+Formula:Revenue – COGS
+Data From:SalesPurchaseOrderItems
+
+15. Gross Margin %
+Formula:(Gross Margin / Revenue) × 100
+Data From:Derived from above
+
+16. Net Profit
+Formula:Gross Margin – Other Expenses(If no expense table → Same as Gross Margin in Phase 1)
+Data From:SalesPurchaseOrderItems
+
+17. Average Order Value (AOV)
+Formula:Total Revenue / Number of Sales Orders
+Data From:Sales → SalesId, SellingPrice, Quantity
+
+18. Revenue Contribution by Product
+Formula:Product Revenue / Total Revenue
+Data From:Sales → ProductId, SellingPrice, Quantity
+
+19. Cash vs Digital %
+Formula:(PaymentType Revenue / Total Revenue) × 100
+Data From:Payments → PaymentType, PaymentTotal
+
+
+Vendor Insights
+20. Total Vendor Payables
+Formula:Sum(RemainingAmount)
+Data From:PurchaseOrder → RemainingAmount
+
+21. Average Payment Delay
+Formula:Avg(PaymentDate – DueDate)
+Data From:PurchaseOrderVendor Payment Allocation → PaymentDate, DueDate
+
+22. % Late Vendor Payments
+Formula:(Late Payments / Total Payments) × 100
+Data From:Vendor Payment Allocation → PaymentDate, DueDate
+
+23. Vendor Purchase Share %
+Formula:Vendor Purchase Amount / Total Purchase Amount
+Data From:PurchaseOrder → VendorId, TotalAmount
+
+24. Lead Time vs Expected Window
+Actual Lead Time:DeliveryDate – OrderDate
+Expected Lead Time:From Purchase Window Table → Category, ExpectedDays
+Comparison:Lead Time Variance = Actual – Expected
+Data From:PurchaseOrder → OrderDateInventory Ledger → TransactionDate (first stock arrival)Purchase Window Table → Category, ExpectedDaysProduct → Category
+
+Operational Insights
+25. Reorder Alerts
+Formula:CurrentStock ≤ ReorderLevel
+Data From:Product Summary → CurrentStock
+
+26. Top 10 Products
+Formula:Top 10 by Revenue OR Quantity
+Data From:Sales → ProductId, SellingPrice, Quantity
+
+27. Category Performance
+Formula:Revenue grouped by Category
+Data From:SalesProduct → Category
+
+28. Monthly Sales Trend
+Formula:Monthly Sum(SellingPrice × Quantity)
+Data From:Sales → Date, SellingPrice, Quantity
+
+29. Date Range Filtering
+Apply WHERE Date BETWEEN start & end
+Data From:Sales → DatePurchaseOrder → OrderDateInventory Ledger → TransactionDate
+

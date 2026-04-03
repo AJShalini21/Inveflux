@@ -1,0 +1,34 @@
+# Tech Stack Details
+Read this and take the mandatory tech stack for the project.
+
+Backend
+* Java 21 (LTS)
+* Spring Boot 3.2.x (latest stable 3.x)
+* Spring Data JPA
+* Spring Security 6.x
+* Spring Validation
+* MapStruct 1.5.x
+* Lombok (latest stable)
+* springdoc-openapi 2.x (Swagger)
+* Flyway 9.x
+* PostgreSQL Driver 42.x
+Database
+* PostgreSQL 15 or 16
+Build Tool
+* Maven 3.9.xor
+* Gradle 8.x
+Frontend
+* React 18.x
+* TypeScript 5.x
+* Vite 5.x
+UI Framework
+* Material UI (MUI) v5+or
+* Ant Design v5+
+Charts
+* Recharts 2.xor
+* Apache ECharts 5.xor
+* ApexCharts 3.x
+Optional (Performance / Production)
+* Redis 7.x (caching)
+* Docker (latest stable)
+* Nginx (latest stable)
