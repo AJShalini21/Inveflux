@@ -1,8 +1,29 @@
-import { useEffect, useState } from "react";
-import { PageHeader } from "../components/PageHeader";
-import { Card } from "../components/ui/card";
-import { PieChart, Pie, Cell, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Legend } from "recharts";
-import { inventoryService, StockPulse, HealthStatus, Velocity, RiskProduct } from "../services/inventory";
+import { useEffect, useState } from 'react';
+import { PageHeader } from '../components/PageHeader';
+import { Card } from '../components/ui/card';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+  Legend,
+} from 'recharts';
+import {
+  inventoryService,
+  StockPulse,
+  HealthStatus,
+  Velocity,
+  RiskProduct,
+} from '../services/inventory';
+import tokens from '../../styles/tokens';
 
 export function InventoryPage() {
   const [stockPulse, setStockPulse] = useState<StockPulse | null>(null);
@@ -27,8 +48,8 @@ export function InventoryPage() {
         setVelocity(velocityData);
         setRiskProducts(riskData);
       } catch (err) {
-        console.error("Error fetching inventory data:", err);
-        setError("Failed to load inventory data. Please try again later.");
+        console.error('Error fetching inventory data:', err);
+        setError('Failed to load inventory data. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -48,43 +69,70 @@ export function InventoryPage() {
   if (error) {
     return (
       <div className="flex items-center justify-center h-full">
-      <div className="text-lg text-[#f43f5e]">{error}</div>
+        <div className="text-lg" style={{ color: tokens.colors.dangerLight }}>
+          {error}
+        </div>
       </div>
     );
   }
 
   // Map Backend Stock Pulse Distribution to Chart Data
-  const productDistributionData = stockPulse ? [
-    { name: "Healthy", value: stockPulse.summary.healthyStockCount, color: "#84cc16" },
-    { name: "Low", value: stockPulse.summary.lowStockCount, color: "#f97316" },
-    { name: "Out", value: stockPulse.summary.outOfStockCount, color: "#f43f5e" },
-    { name: "Overstock", value: stockPulse.summary.overstockedCount, color: "#06b6d4" },
-  ] : [];
+  const productDistributionData = stockPulse
+    ? [
+        {
+          name: 'Healthy',
+          value: stockPulse.summary.healthyStockCount,
+          color: tokens.colors.successLight,
+        },
+        { name: 'Low', value: stockPulse.summary.lowStockCount, color: tokens.colors.warningDark },
+        {
+          name: 'Out',
+          value: stockPulse.summary.outOfStockCount,
+          color: tokens.colors.dangerLight,
+        },
+        {
+          name: 'Overstock',
+          value: stockPulse.summary.overstockedCount,
+          color: tokens.colors.accentBlue,
+        },
+      ]
+    : [];
 
-  const inventoryValueData = stockPulse?.categoryValueContribution.map((c, i) => {
-    const COLORS = ["#0ea5e9", "#ef4444", "#f59e0b", "#10b981", "#8b5cf6", "#ec4899", "#6366f1"];
-    return {
-      name: c.category,
-      value: c.inventoryValue,
-      color: COLORS[i % COLORS.length]
-    };
-  }) || [];
+  const inventoryValueData =
+    stockPulse?.categoryValueContribution.map((c, i) => {
+      const COLORS = [
+        tokens.colors.sky,
+        tokens.colors.danger,
+        tokens.colors.warning,
+        tokens.colors.teal,
+        tokens.colors.purple,
+        tokens.colors.pink,
+        tokens.colors.indigo600,
+      ];
+      return {
+        name: c.category,
+        value: c.inventoryValue,
+        color: COLORS[i % COLORS.length],
+      };
+    }) || [];
 
-  const velocityChartData = velocity.map(v => {
+  const velocityChartData = velocity.map((v) => {
     const color =
-      v.sellThroughRate >= 60 ? "#10b981" : // High (Green)
-      v.sellThroughRate >= 40 ? "#3b82f6" : // Medium-High (Blue)
-      v.sellThroughRate >= 20 ? "#f97316" : // Low (Orange)
-      "#ef4444"; // Very Low (Red)
-      
+      v.sellThroughRate >= 60
+        ? tokens.colors.teal // High (Green)
+        : v.sellThroughRate >= 40
+          ? tokens.colors.accentIndigo // Medium-High (Blue)
+          : v.sellThroughRate >= 20
+            ? tokens.colors.warningDark // Low (Orange)
+            : tokens.colors.dangerLight; // Very Low (Red)
+
     return {
       ...v,
       coverage: v.stockCoverageDays,
       sellThrough: v.sellThroughRate,
-      color: color
+      color: color,
     };
   });
-
 
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto">
@@ -124,24 +172,36 @@ export function InventoryPage() {
                 </div>
               </div>
               <div className="mt-6 space-y-2 w-full">
-                  <div className="flex items-center gap-4 text-xs">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-[#84cc16]"></div>
-                      <span>Healthy</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-[#f97316]"></div>
-                      <span>Low</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-[#f43f5e]"></div>
-                      <span>Out</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-[#06b6d4]"></div>
-                      <span>Overstock</span>
-                    </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: tokens.colors.successLight }}
+                    ></div>
+                    <span>Healthy</span>
                   </div>
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: tokens.colors.warningDark }}
+                    ></div>
+                    <span>Low</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: tokens.colors.dangerLight }}
+                    ></div>
+                    <span>Out</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: tokens.colors.accentBlue }}
+                    ></div>
+                    <span>Overstock</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -177,10 +237,17 @@ export function InventoryPage() {
                 {inventoryValueData.map((item, idx) => (
                   <div key={idx} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></div>
-                      <span className="text-gray-600 truncate max-w-[120px]" title={item.name}>{item.name}</span>
+                      <div
+                        className="w-2.5 h-2.5 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      <span className="text-gray-600 truncate max-w-[120px]" title={item.name}>
+                        {item.name}
+                      </span>
                     </div>
-                    <span className="font-semibold text-gray-800">${(item.value / 1000).toFixed(1)}k</span>
+                    <span className="font-semibold text-gray-800">
+                      ${(item.value / 1000).toFixed(1)}k
+                    </span>
                   </div>
                 ))}
               </div>
@@ -199,72 +266,97 @@ export function InventoryPage() {
                 const rad = (angle * Math.PI) / 180;
                 const nx = 100 + 65 * Math.cos(rad);
                 const ny = 100 - 65 * Math.sin(rad);
-                
+
                 return (
                   <svg className="w-full h-full drop-shadow-sm" viewBox="0 0 200 110">
                     <path
                       d="M 20 100 A 80 80 0 0 1 180 100"
                       fill="none"
-                      stroke="#f1f5f9"
+                      stroke={tokens.colors.neutral100}
                       strokeWidth="16"
                       strokeLinecap="round"
                     />
                     <path
                       d="M 20 100 A 80 80 0 0 1 60 30.7"
                       fill="none"
-                      stroke="#84cc16"
+                      stroke={tokens.colors.successLight}
                       strokeWidth="16"
                       strokeLinecap="round"
                     />
                     <path
                       d="M 60 30.7 A 80 80 0 0 1 140 30.7"
                       fill="none"
-                      stroke="#f97316"
+                      stroke={tokens.colors.warningDark}
                       strokeWidth="16"
                     />
                     <path
                       d="M 140 30.7 A 80 80 0 0 1 180 100"
                       fill="none"
-                      stroke="#f43f5e"
+                      stroke={tokens.colors.dangerLight}
                       strokeWidth="16"
                       strokeLinecap="round"
                     />
-                    <line x1="100" y1="100" x2={nx} y2={ny} stroke="#1e293b" strokeWidth="4" strokeLinecap="round" />
-                    <circle cx="100" cy="100" r="6" fill="#1e293b" />
-                    <circle cx="100" cy="100" r="2.5" fill="#ffffff" />
+                    <line
+                      x1="100"
+                      y1="100"
+                      x2={nx}
+                      y2={ny}
+                      stroke={tokens.colors.neutral900}
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="100" cy="100" r="6" fill={tokens.colors.neutral900} />
+                    <circle cx="100" cy="100" r="2.5" fill={tokens.colors.white} />
                   </svg>
                 );
               })()}
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-center w-full">
-                <div className="text-3xl font-bold text-gray-800">{healthStatus?.dio.toFixed(0)} <span className="text-sm text-gray-500 font-medium">Days</span></div>
+                <div className="text-3xl font-bold text-gray-800">
+                  {healthStatus?.dio.toFixed(0)}{' '}
+                  <span className="text-sm text-gray-500 font-medium">Days</span>
+                </div>
               </div>
             </div>
             <div className="w-full space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span>Health Rating</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#06b6d4]"></div>
-                  <span className="font-medium text-[#06b6d4]">{healthStatus?.healthStatus}</span>
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: tokens.colors.accentBlue }}
+                  ></div>
+                  <span className="font-medium" style={{ color: tokens.colors.accentBlue }}>
+                    {healthStatus?.healthStatus}
+                  </span>
                 </div>
               </div>
               <div className="space-y-2 pl-5">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#f43f5e]"></div>
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: tokens.colors.dangerLight }}
+                    ></div>
                     <span>Dead Stock</span>
                   </div>
                   <span>{healthStatus?.deadStockPercentage.toFixed(1)}%</span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#06b6d4]"></div>
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: tokens.colors.accentBlue }}
+                    ></div>
                     <span>Inventory Turnover</span>
                   </div>
                   <span>{healthStatus?.inventoryTurnover.toFixed(1)}x</span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#f97316]"></div>
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: tokens.colors.warningDark }}
+                    ></div>
                     <span>Overstock</span>
                   </div>
                   <span>{healthStatus?.overstockPercentage.toFixed(1)}%</span>
@@ -283,26 +375,46 @@ export function InventoryPage() {
           <div className="mb-4">
             <div className="flex items-center gap-4 text-xs mb-2">
               <span className="text-gray-600">Avg Velocity Score:</span>
-              <span className="text-2xl font-bold text-[#06b6d4]">
-                {(velocityChartData.reduce((acc, v) => acc + v.velocityScore, 0) / (velocityChartData.length || 1)).toFixed(0)}
+              <span className="text-2xl font-bold" style={{ color: tokens.colors.accentBlue }}>
+                {(
+                  velocityChartData.reduce((acc, v) => acc + v.velocityScore, 0) /
+                  (velocityChartData.length || 1)
+                ).toFixed(0)}
               </span>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <XAxis type="number" dataKey="coverage" name="Stock Coverage (Days)" label={{ value: "Stock Coverage (Days)", position: "bottom", fontSize: 10 }} />
-              <YAxis type="number" dataKey="sellThrough" name="Sell-through Rate %" label={{ value: "Sell-through Rate %", angle: -90, position: "insideLeft", fontSize: 10 }} />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Scatter name="Products" data={velocityChartData} fill="#06b6d4">
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke={tokens.colors.neutral200}
+              />
+              <XAxis
+                type="number"
+                dataKey="coverage"
+                name="Stock Coverage (Days)"
+                label={{ value: 'Stock Coverage (Days)', position: 'bottom', fontSize: 10 }}
+              />
+              <YAxis
+                type="number"
+                dataKey="sellThrough"
+                name="Sell-through Rate %"
+                label={{
+                  value: 'Sell-through Rate %',
+                  angle: -90,
+                  position: 'insideLeft',
+                  fontSize: 10,
+                }}
+              />
+              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+              <Scatter name="Products" data={velocityChartData} fill={tokens.colors.accentBlue}>
                 {velocityChartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Scatter>
             </ScatterChart>
           </ResponsiveContainer>
-
-
         </Card>
 
         {/* Top Risk Products */}
@@ -311,7 +423,9 @@ export function InventoryPage() {
             <h3 className="text-base font-semibold">TOP RISK PRODUCTS</h3>
             <div className="flex items-center gap-2 text-xs">
               <span className="text-gray-500">CASH RISK SCORE:</span>
-              <span className="font-bold text-[#06b6d4]">{healthStatus?.cashRiskScore.toFixed(1)}</span>
+              <span className="font-bold" style={{ color: tokens.colors.accentBlue }}>
+                {healthStatus?.cashRiskScore.toFixed(1)}
+              </span>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -336,15 +450,21 @@ export function InventoryPage() {
                       </span>
                     </td>
                     <td className="py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        product.riskType === 'OUT_OF_STOCK' ? 'bg-red-50 text-red-600' :
-                        product.riskType === 'LOW_STOCK' ? 'bg-yellow-50 text-yellow-600' :
-                        'bg-blue-50 text-blue-600'
-                      }`}>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          product.riskType === 'OUT_OF_STOCK'
+                            ? 'bg-red-50 text-red-600'
+                            : product.riskType === 'LOW_STOCK'
+                              ? 'bg-yellow-50 text-yellow-600'
+                              : 'bg-blue-50 text-blue-600'
+                        }`}
+                      >
                         {product.riskType.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="py-3 text-right font-bold text-gray-900">${product.inventoryValue.toLocaleString()}</td>
+                    <td className="py-3 text-right font-bold text-gray-900">
+                      ${product.inventoryValue.toLocaleString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>

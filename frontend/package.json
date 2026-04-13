@@ -6,7 +6,14 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint \"src\" --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint \"src\" --ext .ts,.tsx,.js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "prepare": "husky install"
+  },
+  "scripts-additional": {
+    "migrate:colors": "node ./scripts/migrate-to-css-vars.js"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -66,7 +73,16 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
     "@vitejs/plugin-react": "4.7.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.2",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
@@ -87,4 +103,12 @@
       "vite": "6.3.5"
     }
   }
+  ,
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+
 }

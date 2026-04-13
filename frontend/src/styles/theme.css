@@ -32,7 +32,7 @@
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: oklch(0.708 0 0);
-  --chart-1: #F43F5E;
+  --chart-1: #f43f5e;
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
@@ -49,10 +49,34 @@
   --white: #ffffff;
 
   /* Inveflux custom colors */
-  --bg-primary: #0B4B86;
-  --bg-secondary: #BA94DA;
+  --bg-primary: #0b4b86;
+  --bg-secondary: #ba94da;
   --gradient-accent: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   --logo-gradient: linear-gradient(135deg, var(--white) 0%, var(--bg-secondary) 100%);
+    /* Token-based CSS variables (kept in sync with src/styles/tokens.ts)
+      These are used by the migration script and Tailwind config. */
+    --color-accent-blue: #06b6d4;
+    --color-sky: #0ea5e9;
+    --color-success-light: #84cc16;
+    --color-success-600: #65a30d;
+    --color-success-200: #bef264;
+    --color-warning-dark: #f97316;
+    --color-warning: #f59e0b;
+    --color-teal: #10b981;
+    --color-purple: #8b5cf6;
+    --color-pink: #ec4899;
+    --color-indigo-600: #6366f1;
+    --color-danger: #ef4444;
+    --color-danger-light: #f43f5e;
+    --color-danger-700: #be123c;
+    --color-danger-200: #fda4af;
+    --color-neutral-100: #f1f5f9;
+    --color-neutral-200: #f0f0f0;
+    --color-neutral-900: #1e293b;
+    --color-white: #ffffff;
+    --color-muted-1: #94a3b8;
+    --color-indigo-500: #4f46e5;
+    --color-indigo-400: #818cf8;
 }
 
 .dark {
@@ -71,7 +95,7 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: #F43F5E;
+  --destructive-foreground: #f43f5e;
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
@@ -81,7 +105,7 @@
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: #F43F5E;
+  --chart-5: #f43f5e;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);

@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import { Card } from "../ui/card";
+import { motion } from 'motion/react';
+import { Card } from '../ui/card';
 
 type ProfitFlowCardProps = {
   revenueTotal: number;
@@ -53,7 +53,14 @@ export function ProfitFlowCard(props: ProfitFlowCardProps) {
   const endY_cogs = endY_opex + opexH + 50;
 
   // Sankey Link Path Helper
-  const ribbonPath = (x0: number, y0: number, x1: number, y1: number, width0: number, width1: number) => {
+  const ribbonPath = (
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+    width0: number,
+    width1: number,
+  ) => {
     const cpX = (x1 - x0) / 2.2;
     return `M ${x0} ${y0} C ${x0 + cpX} ${y0}, ${x1 - cpX} ${y1}, ${x1} ${y1} L ${x1} ${y1 + width1} C ${x1 - cpX} ${y1 + width1}, ${x0 + cpX} ${y0 + width0}, ${x0} ${y0 + width0} Z`;
   };
@@ -64,15 +71,19 @@ export function ProfitFlowCard(props: ProfitFlowCardProps) {
     <Card className="p-10 bg-white border-slate-200 overflow-hidden shadow-sm relative">
       <div className="flex items-start justify-between mb-10">
         <div>
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">Financial Flow & Profitability</h3>
+          <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+            Financial Flow & Profitability
+          </h3>
           <p className="text-xs text-slate-400 mt-1 uppercase font-bold tracking-[0.2em]">
             Revenue Conversion Strategy
           </p>
         </div>
         <div className="text-right">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Efficiency Ratio</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
+            Efficiency Ratio
+          </span>
           <div className="text-3xl font-black text-[#84cc16]">
-            {totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : "0.0"}%
+            {totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : '0.0'}%
           </div>
         </div>
       </div>
@@ -112,15 +123,22 @@ export function ProfitFlowCard(props: ProfitFlowCardProps) {
             <motion.path
               initial={{ opacity: 0, pathLength: 0 }}
               animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 1.8, ease: "easeInOut" }}
+              transition={{ duration: 1.8, ease: 'easeInOut' }}
               d={ribbonPath(col1 + nodeW, startY_cash, col2, midY, cashH, totalH * (cashPct / 100))}
               fill="url(#flow-cash)"
             />
             <motion.path
               initial={{ opacity: 0, pathLength: 0 }}
               animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 1.8, ease: "easeInOut", delay: 0.3 }}
-              d={ribbonPath(col1 + nodeW, startY_digital, col2, midY + totalH * (cashPct / 100), digitalH, totalH * (digitalPct / 100))}
+              transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.3 }}
+              d={ribbonPath(
+                col1 + nodeW,
+                startY_digital,
+                col2,
+                midY + totalH * (cashPct / 100),
+                digitalH,
+                totalH * (digitalPct / 100),
+              )}
               fill="url(#flow-digital)"
             />
 
@@ -128,55 +146,156 @@ export function ProfitFlowCard(props: ProfitFlowCardProps) {
             <motion.path
               initial={{ opacity: 0, pathLength: 0 }}
               animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 1.8, ease: "easeInOut", delay: 0.6 }}
-              d={ribbonPath(col2 + nodeW, midY, col3, endY_profit, totalH * (netProfit / totalRevenue), netProfitH)}
+              transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.6 }}
+              d={ribbonPath(
+                col2 + nodeW,
+                midY,
+                col3,
+                endY_profit,
+                totalH * (netProfit / totalRevenue),
+                netProfitH,
+              )}
               fill="url(#flow-rev-profit)"
             />
             <motion.path
               initial={{ opacity: 0, pathLength: 0 }}
               animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 1.8, ease: "easeInOut", delay: 0.8 }}
-              d={ribbonPath(col2 + nodeW, midY + totalH * (netProfit / totalRevenue), col3, endY_opex, totalH * (opex / totalRevenue), opexH)}
+              transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.8 }}
+              d={ribbonPath(
+                col2 + nodeW,
+                midY + totalH * (netProfit / totalRevenue),
+                col3,
+                endY_opex,
+                totalH * (opex / totalRevenue),
+                opexH,
+              )}
               fill="url(#flow-rev-opex)"
             />
             <motion.path
               initial={{ opacity: 0, pathLength: 0 }}
               animate={{ opacity: 1, pathLength: 1 }}
-              transition={{ duration: 1.8, ease: "easeInOut", delay: 1.0 }}
-              d={ribbonPath(col2 + nodeW, midY + totalH * ((netProfit + opex) / totalRevenue), col3, endY_cogs, totalH * (cogs / totalRevenue), cogsH)}
+              transition={{ duration: 1.8, ease: 'easeInOut', delay: 1.0 }}
+              d={ribbonPath(
+                col2 + nodeW,
+                midY + totalH * ((netProfit + opex) / totalRevenue),
+                col3,
+                endY_cogs,
+                totalH * (cogs / totalRevenue),
+                cogsH,
+              )}
               fill="url(#flow-rev-cogs)"
             />
 
             {/* Nodes (Vertical Bars) */}
             <rect x={col1} y={startY_cash} width={nodeW} height={cashH} fill="#8f2b5dff" rx={3} />
-            <rect x={col1} y={startY_digital} width={nodeW} height={digitalH} fill="#1e4686ff" rx={3} />
+            <rect
+              x={col1}
+              y={startY_digital}
+              width={nodeW}
+              height={digitalH}
+              fill="#1e4686ff"
+              rx={3}
+            />
             <rect x={col2} y={midY} width={nodeW} height={totalH} fill="#ffffff" rx={3} />
-            <rect x={col3} y={endY_profit} width={nodeW} height={netProfitH} fill="#4f7a0dff" rx={3} />
+            <rect
+              x={col3}
+              y={endY_profit}
+              width={nodeW}
+              height={netProfitH}
+              fill="#4f7a0dff"
+              rx={3}
+            />
             <rect x={col3} y={endY_opex} width={nodeW} height={opexH} fill="#a34d0fff" rx={3} />
             <rect x={col3} y={endY_cogs} width={nodeW} height={cogsH} fill="#9e283cff" rx={3} />
 
             {/* Labels */}
             <g className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">
               {/* Payment Labels */}
-              <text x={col1 - 15} y={startY_cash + cashH / 2} textAnchor="end" className="fill-slate-800">Cash</text>
-              <text x={col1 - 15} y={startY_cash + cashH / 2 + 14} textAnchor="end" className="fill-pink-500 font-black">{`${cashPct.toFixed(1)}%`}</text>
+              <text
+                x={col1 - 15}
+                y={startY_cash + cashH / 2}
+                textAnchor="end"
+                className="fill-slate-800"
+              >
+                Cash
+              </text>
+              <text
+                x={col1 - 15}
+                y={startY_cash + cashH / 2 + 14}
+                textAnchor="end"
+                className="fill-pink-500 font-black"
+              >{`${cashPct.toFixed(1)}%`}</text>
 
-              <text x={col1 - 15} y={startY_digital + digitalH / 2} textAnchor="end" className="fill-slate-800">Digital</text>
-              <text x={col1 - 15} y={startY_digital + digitalH / 2 + 14} textAnchor="end" className="fill-blue-500 font-black">{`${digitalPct.toFixed(1)}%`}</text>
+              <text
+                x={col1 - 15}
+                y={startY_digital + digitalH / 2}
+                textAnchor="end"
+                className="fill-slate-800"
+              >
+                Digital
+              </text>
+              <text
+                x={col1 - 15}
+                y={startY_digital + digitalH / 2 + 14}
+                textAnchor="end"
+                className="fill-blue-500 font-black"
+              >{`${digitalPct.toFixed(1)}%`}</text>
 
               {/* Revenue Label */}
-              <text x={col2 + nodeW / 2} y={midY - 25} textAnchor="middle" className="fill-slate-900 font-black text-sm tracking-widest">Total Revenue</text>
-              <text x={col2 + nodeW / 2} y={midY - 10} textAnchor="middle" className="fill-emerald-600 font-black text-xs">{props.formatMoney(totalRevenue)}</text>
+              <text
+                x={col2 + nodeW / 2}
+                y={midY - 25}
+                textAnchor="middle"
+                className="fill-slate-900 font-black text-sm tracking-widest"
+              >
+                Total Revenue
+              </text>
+              <text
+                x={col2 + nodeW / 2}
+                y={midY - 10}
+                textAnchor="middle"
+                className="fill-emerald-600 font-black text-xs"
+              >
+                {props.formatMoney(totalRevenue)}
+              </text>
 
               {/* Output Labels */}
-              <text x={col3 + nodeW + 15} y={endY_profit + netProfitH / 2} className="fill-emerald-800">Net Profit</text>
-              <text x={col3 + nodeW + 15} y={endY_profit + netProfitH / 2 + 14} className="fill-slate-400 font-bold">{props.formatMoney(netProfit)}</text>
+              <text
+                x={col3 + nodeW + 15}
+                y={endY_profit + netProfitH / 2}
+                className="fill-emerald-800"
+              >
+                Net Profit
+              </text>
+              <text
+                x={col3 + nodeW + 15}
+                y={endY_profit + netProfitH / 2 + 14}
+                className="fill-slate-400 font-bold"
+              >
+                {props.formatMoney(netProfit)}
+              </text>
 
-              <text x={col3 + nodeW + 15} y={endY_opex + opexH / 2} className="fill-amber-800">Opex</text>
-              <text x={col3 + nodeW + 15} y={endY_opex + opexH / 2 + 14} className="fill-slate-400 font-bold">{props.formatMoney(opex)}</text>
+              <text x={col3 + nodeW + 15} y={endY_opex + opexH / 2} className="fill-amber-800">
+                Opex
+              </text>
+              <text
+                x={col3 + nodeW + 15}
+                y={endY_opex + opexH / 2 + 14}
+                className="fill-slate-400 font-bold"
+              >
+                {props.formatMoney(opex)}
+              </text>
 
-              <text x={col3 + nodeW + 15} y={endY_cogs + cogsH / 2} className="fill-rose-800">COGS</text>
-              <text x={col3 + nodeW + 15} y={endY_cogs + cogsH / 2 + 14} className="fill-slate-400 font-bold">{props.formatMoney(cogs)}</text>
+              <text x={col3 + nodeW + 15} y={endY_cogs + cogsH / 2} className="fill-rose-800">
+                COGS
+              </text>
+              <text
+                x={col3 + nodeW + 15}
+                y={endY_cogs + cogsH / 2 + 14}
+                className="fill-slate-400 font-bold"
+              >
+                {props.formatMoney(cogs)}
+              </text>
             </g>
           </svg>
         )}
@@ -204,4 +323,3 @@ export function ProfitFlowCard(props: ProfitFlowCardProps) {
     </Card>
   );
 }
-

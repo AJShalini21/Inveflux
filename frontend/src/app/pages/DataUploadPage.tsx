@@ -1,14 +1,14 @@
-import { PageHeader } from "../components/PageHeader";
-import { Card } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Upload, FileText, CheckCircle, AlertCircle, Clock, Download } from "lucide-react";
-import { useState } from "react";
+import { PageHeader } from '../components/PageHeader';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Upload, FileText, CheckCircle, AlertCircle, Clock, Download } from 'lucide-react';
+import { useState } from 'react';
 
 export function DataUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState([
-    { name: "inventory_data_2024.csv", status: "completed", size: "2.4 MB", date: "2024-03-01" },
-    { name: "sales_transactions.xlsx", status: "completed", size: "5.1 MB", date: "2024-03-01" },
-    { name: "vendor_information.csv", status: "processing", size: "1.8 MB", date: "2024-03-02" },
+    { name: 'inventory_data_2024.csv', status: 'completed', size: '2.4 MB', date: '2024-03-01' },
+    { name: 'sales_transactions.xlsx', status: 'completed', size: '5.1 MB', date: '2024-03-01' },
+    { name: 'vendor_information.csv', status: 'processing', size: '1.8 MB', date: '2024-03-02' },
   ]);
 
   return (
@@ -22,20 +22,25 @@ export function DataUploadPage() {
         <Card className="p-6">
           <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--bg-primary)] transition-colors cursor-pointer"
-            style={{ borderColor: "var(--border)" }}
+            style={{ borderColor: 'var(--border)' }}
           >
             <div
               className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)" }}
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)',
+              }}
             >
               <Upload className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-base mb-2">Inventory Data</h3>
-            <p className="text-xs text-gray-500 mb-4">Upload CSV or Excel files with inventory information</p>
+            <p className="text-xs text-gray-500 mb-4">
+              Upload CSV or Excel files with inventory information
+            </p>
             <Button
               variant="outline"
               className="text-sm"
-              style={{ borderColor: "var(--bg-primary)", color: "var(--bg-primary)" }}
+              style={{ borderColor: 'var(--bg-primary)', color: 'var(--bg-primary)' }}
             >
               Select File
             </Button>
@@ -53,11 +58,14 @@ export function DataUploadPage() {
         <Card className="p-6">
           <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--bg-primary)] transition-colors cursor-pointer"
-            style={{ borderColor: "var(--border)" }}
+            style={{ borderColor: 'var(--border)' }}
           >
             <div
               className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)" }}
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)',
+              }}
             >
               <FileText className="w-8 h-8 text-white" />
             </div>
@@ -66,7 +74,7 @@ export function DataUploadPage() {
             <Button
               variant="outline"
               className="text-sm"
-              style={{ borderColor: "var(--bg-primary)", color: "var(--bg-primary)" }}
+              style={{ borderColor: 'var(--bg-primary)', color: 'var(--bg-primary)' }}
             >
               Select File
             </Button>
@@ -84,11 +92,14 @@ export function DataUploadPage() {
         <Card className="p-6">
           <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[var(--bg-primary)] transition-colors cursor-pointer"
-            style={{ borderColor: "var(--border)" }}
+            style={{ borderColor: 'var(--border)' }}
           >
             <div
               className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)" }}
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)',
+              }}
             >
               <Upload className="w-8 h-8 text-white" />
             </div>
@@ -97,7 +108,7 @@ export function DataUploadPage() {
             <Button
               variant="outline"
               className="text-sm"
-              style={{ borderColor: "var(--bg-primary)", color: "var(--bg-primary)" }}
+              style={{ borderColor: 'var(--bg-primary)', color: 'var(--bg-primary)' }}
             >
               Select File
             </Button>
@@ -145,12 +156,12 @@ export function DataUploadPage() {
                   <td className="py-4 px-4 text-sm text-gray-600">{file.size}</td>
                   <td className="py-4 px-4 text-sm text-gray-600">{file.date}</td>
                   <td className="py-4 px-4">
-                    {file.status === "completed" ? (
+                    {file.status === 'completed' ? (
                       <span className="flex items-center gap-2 text-xs text-green-600">
                         <CheckCircle className="w-4 h-4" />
                         Completed
                       </span>
-                    ) : file.status === "processing" ? (
+                    ) : file.status === 'processing' ? (
                       <span className="flex items-center gap-2 text-xs text-blue-600">
                         <Clock className="w-4 h-4" />
                         Processing
@@ -182,7 +193,7 @@ export function DataUploadPage() {
             <div className="flex items-start gap-2">
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "var(--gradient-accent)" }}
+                style={{ background: 'var(--gradient-accent)' }}
               >
                 <span className="text-white text-xs">1</span>
               </div>
@@ -191,7 +202,7 @@ export function DataUploadPage() {
             <div className="flex items-start gap-2">
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "var(--gradient-accent)" }}
+                style={{ background: 'var(--gradient-accent)' }}
               >
                 <span className="text-white text-xs">2</span>
               </div>
@@ -200,7 +211,7 @@ export function DataUploadPage() {
             <div className="flex items-start gap-2">
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "var(--gradient-accent)" }}
+                style={{ background: 'var(--gradient-accent)' }}
               >
                 <span className="text-white text-xs">3</span>
               </div>
@@ -209,7 +220,7 @@ export function DataUploadPage() {
             <div className="flex items-start gap-2">
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "var(--gradient-accent)" }}
+                style={{ background: 'var(--gradient-accent)' }}
               >
                 <span className="text-white text-xs">4</span>
               </div>
@@ -227,7 +238,7 @@ export function DataUploadPage() {
                 <span className="text-green-600">100%</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full" style={{ width: "100%" }}></div>
+                <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
               </div>
             </div>
             <div>
@@ -236,18 +247,18 @@ export function DataUploadPage() {
                 <span className="text-green-600">100%</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full" style={{ width: "100%" }}></div>
+                <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between text-sm mb-2">
                 <span>Vendor Information</span>
-                <span style={{ color: "var(--bg-primary)" }}>65%</span>
+                <span style={{ color: 'var(--bg-primary)' }}>65%</span>
               </div>
               <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full animate-pulse"
-                  style={{ width: "65%", background: "var(--gradient-accent)" }}
+                  style={{ width: '65%', background: 'var(--gradient-accent)' }}
                 ></div>
               </div>
             </div>
@@ -258,7 +269,8 @@ export function DataUploadPage() {
               <div>
                 <div className="text-blue-700 mb-1">Processing in progress</div>
                 <div className="text-gray-600 text-xs">
-                  Your vendor information file is currently being processed. You'll receive a notification when it's complete.
+                  Your vendor information file is currently being processed. You'll receive a
+                  notification when it's complete.
                 </div>
               </div>
             </div>

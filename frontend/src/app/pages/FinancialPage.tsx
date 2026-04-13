@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { PageHeader } from "../components/PageHeader";
-import { Card } from "../components/ui/card";
+import { useState, useEffect } from 'react';
+import { PageHeader } from '../components/PageHeader';
+import { Card } from '../components/ui/card';
 import {
   LineChart,
   Line,
@@ -15,7 +15,7 @@ import {
   ResponsiveContainer,
   Cell,
   Legend,
-} from "recharts";
+} from 'recharts';
 import {
   financialService,
   RevenueSummary,
@@ -27,8 +27,9 @@ import {
   RevenueTrend,
   OrderSizeBucket,
   TopBottomRevenue,
-} from "../services/financial";
-import { ProfitFlowCard } from "../components/financial/ProfitFlowCard";
+} from '../services/financial';
+import { ProfitFlowCard } from '../components/financial/ProfitFlowCard';
+import tokens from '../../styles/tokens';
 
 export function FinancialPage() {
   const [revenue, setRevenue] = useState<RevenueSummary | null>(null);
@@ -71,8 +72,8 @@ export function FinancialPage() {
         setTopBottom(tbRes);
         setError(null);
       } catch (err) {
-        console.error("Failed to load financial insights:", err);
-        setError("Failed to load financial insights. Please try again later.");
+        console.error('Failed to load financial insights:', err);
+        setError('Failed to load financial insights. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -80,7 +81,7 @@ export function FinancialPage() {
     fetchAll();
   }, []);
 
-  const fmt = (val: number | undefined | null, prefix = "$", decimals = 0) => {
+  const fmt = (val: number | undefined | null, prefix = '$', decimals = 0) => {
     if (val == null) return `${prefix}0`;
     if (val >= 1_000_000) return `${prefix}${(val / 1_000_000).toFixed(1)}M`;
     if (val >= 1_000) return `${prefix}${(val / 1_000).toFixed(1)}K`;
@@ -111,7 +112,10 @@ export function FinancialPage() {
 
   if (error) {
     return (
-      <div className="p-4 bg-rose-50 text-[#f43f5e] rounded-lg max-w-[1600px] mx-auto mt-6">
+      <div
+        className="p-4 bg-rose-50 rounded-lg max-w-[1600px] mx-auto mt-6"
+        style={{ color: tokens.colors.dangerLight }}
+      >
         {error}
       </div>
     );
@@ -140,26 +144,63 @@ export function FinancialPage() {
           <h3 className="text-base mb-2">Revenue Trend (Daily)</h3>
           <div className="text-xs text-gray-500 mb-4">Daily revenue for dataset period</div>
           <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={revenueTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickMargin={8} minTickGap={20} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(val) => fmt(val, "$", 0)} />
-                <Tooltip cursor={{ fill: '#f8fafc' }} formatter={(val: number) => fmt(val, "$", 0)} />
-                <Line type="monotone" dataKey="revenue" stroke="#84cc16" strokeWidth={2} name="Revenue" dot={false} />
-              </LineChart>
+            <LineChart data={revenueTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke={tokens.colors.neutral200}
+              />
+              <XAxis
+                dataKey="date"
+                stroke={tokens.colors.textMuted}
+                fontSize={11}
+                tickMargin={8}
+                minTickGap={20}
+              />
+              <YAxis
+                stroke={tokens.colors.textMuted}
+                fontSize={11}
+                tickFormatter={(val) => fmt(val, '$', 0)}
+              />
+              <Tooltip
+                cursor={{ fill: tokens.colors.neutral100 }}
+                formatter={(val: number) => fmt(val, '$', 0)}
+              />
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                stroke={tokens.colors.successLight}
+                strokeWidth={2}
+                name="Revenue"
+                dot={false}
+              />
+            </LineChart>
           </ResponsiveContainer>
         </Card>
 
         <Card className="p-6">
           <h3 className="text-base mb-2">Product Contribution vs Profitability</h3>
-          <div className="text-xs text-gray-500 mb-4">Each point = one product (X: revenue, Y: margin %)</div>
+          <div className="text-xs text-gray-500 mb-4">
+            Each point = one product (X: revenue, Y: margin %)
+          </div>
           <ResponsiveContainer width="100%" height={280}>
             <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="revenue" name="Revenue" tickFormatter={(v) => fmt(v, "$")} label={{ value: "Revenue", position: "bottom" }} />
-              <YAxis type="number" dataKey="margin" name="Margin %" label={{ value: "Gross Margin %", angle: -90, position: "insideLeft" }} />
+              <XAxis
+                type="number"
+                dataKey="revenue"
+                name="Revenue"
+                tickFormatter={(v) => fmt(v, '$')}
+                label={{ value: 'Revenue', position: 'bottom' }}
+              />
+              <YAxis
+                type="number"
+                dataKey="margin"
+                name="Margin %"
+                label={{ value: 'Gross Margin %', angle: -90, position: 'insideLeft' }}
+              />
               <Tooltip
-                cursor={{ strokeDasharray: "3 3" }}
+                cursor={{ strokeDasharray: '3 3' }}
                 content={({ payload }) => {
                   if (!payload?.length) return null;
                   const d = payload[0].payload;
@@ -172,21 +213,45 @@ export function FinancialPage() {
                   );
                 }}
               />
-                <Scatter data={scatterData} name="Products">
-                  {scatterData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.margin > 40 ? "#84cc16" : entry.margin > 25 ? "#f97316" : "#f43f5e"}
-                    />
-                  ))}
+              <Scatter data={scatterData} name="Products">
+                {scatterData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.margin > 40
+                        ? tokens.colors.successLight
+                        : entry.margin > 25
+                          ? tokens.colors.warningDark
+                          : tokens.colors.dangerLight
+                    }
+                  />
+                ))}
               </Scatter>
             </ScatterChart>
           </ResponsiveContainer>
-            <div className="flex items-center justify-center gap-6 mt-4 text-xs font-medium text-slate-500">
-              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#84cc16]" /><span>High Margin</span></div>
-              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#f97316]" /><span>Medium</span></div>
-              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#f43f5e]" /><span>Low Margin</span></div>
+          <div className="flex items-center justify-center gap-6 mt-4 text-xs font-medium text-slate-500">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: tokens.colors.successLight }}
+              />
+              <span>High Margin</span>
             </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: tokens.colors.warningDark }}
+              />
+              <span>Medium</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: tokens.colors.dangerLight }}
+              />
+              <span>Low Margin</span>
+            </div>
+          </div>
         </Card>
       </div>
 
@@ -201,31 +266,47 @@ export function FinancialPage() {
             <div className="mb-4 bg-slate-50 rounded-lg p-4 flex items-center justify-between border border-slate-100">
               <div>
                 <div className="text-sm font-medium text-slate-500 mb-1">Target AOV: $85.00</div>
-                <div className="text-xl font-bold text-[#06b6d4]">{fmt(aov?.averageOrderValue, "$", 2)}</div>
+                <div className="text-xl font-bold" style={{ color: tokens.colors.accentBlue }}>
+                  {fmt(aov?.averageOrderValue, '$', 2)}
+                </div>
               </div>
               <div className="w-1/2 h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#06b6d4]"
-                  style={{ width: `${Math.min(100, ((aov?.averageOrderValue ?? 0) / 85) * 100)}%` }}
+                  className="h-full"
+                  style={{
+                    width: `${Math.min(100, ((aov?.averageOrderValue ?? 0) / 85) * 100)}%`,
+                    background: tokens.colors.accentBlue,
+                  }}
                 />
-                </div>
+              </div>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={orderDistribution} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke={tokens.colors.neutral200}
+              />
               <XAxis dataKey="range" fontSize={10} tickLine={false} axisLine={false} />
               <YAxis fontSize={10} tickLine={false} axisLine={false} />
               <Tooltip
-                cursor={{ fill: '#f8fafc' }}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                formatter={(val: number) => [val, "Orders"]}
+                cursor={{ fill: tokens.colors.neutral100 }}
+                contentStyle={{
+                  borderRadius: '8px',
+                  border: 'none',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                }}
+                formatter={(val: number) => [val, 'Orders']}
               />
-                <Bar dataKey="orderCount" radius={[4, 4, 0, 0]}>
-                  {orderDistribution.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#06b6d4" : "#3b82f6"} />
-                  ))}
-                </Bar>
+              <Bar dataKey="orderCount" radius={[4, 4, 0, 0]}>
+                {orderDistribution.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={index % 2 === 0 ? tokens.colors.accentBlue : tokens.colors.accentIndigo}
+                  />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -234,12 +315,15 @@ export function FinancialPage() {
         <Card className="p-6 flex flex-col">
           <h3 className="text-base font-semibold mb-2">Top & Bottom Products by Revenue</h3>
           <div className="text-xs text-gray-500 mb-4">Performance extremes across inventory</div>
-          
+
           <div className="flex-1 flex flex-col space-y-4">
             {/* Top 5 Section */}
             <div className="flex-1 min-h-[140px]">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full bg-[#84cc16]"></div>
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: tokens.colors.successLight }}
+                ></div>
                 <h4 className="font-bold text-slate-700">Highest Revenue</h4>
               </div>
               <ResponsiveContainer width="100%" height="85%">
@@ -258,27 +342,43 @@ export function FinancialPage() {
                     tickLine={false}
                   />
                   <Tooltip
-                    formatter={(v: number) => [fmt(v), "Revenue"]}
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(v: number) => [fmt(v), 'Revenue']}
+                    contentStyle={{
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
                   />
-                    <Bar dataKey="revenueValue" radius={[0, 4, 4, 0]} barSize={24}>
-                      {topProducts.map((_, index) => (
-                        <Cell key={`top-${index}`} fill={index === 0 ? "#65a30d" : index < 3 ? "#84cc16" : "#bef264"} />
-                      ))}
-                    </Bar>
+                  <Bar dataKey="revenueValue" radius={[0, 4, 4, 0]} barSize={24}>
+                    {topProducts.map((_, index) => (
+                      <Cell
+                        key={`top-${index}`}
+                        fill={
+                          index === 0
+                            ? tokens.colors.successLight
+                            : index < 3
+                              ? tokens.colors.successLight
+                              : tokens.colors.successLight
+                        }
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Subtle separator */}
             <div className="w-full flex justify-center">
-               <div className="w-1/3 h-px bg-gray-100"></div>
+              <div className="w-1/3 h-px bg-gray-100"></div>
             </div>
 
             {/* Bottom 5 Section */}
             <div className="flex-1 min-h-[140px]">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full bg-[#f43f5e]"></div>
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: tokens.colors.dangerLight }}
+                ></div>
                 <h4 className="font-bold text-slate-700">Lowest Revenue</h4>
               </div>
               <ResponsiveContainer width="100%" height="85%">
@@ -297,14 +397,27 @@ export function FinancialPage() {
                     tickLine={false}
                   />
                   <Tooltip
-                    formatter={(v: number) => [fmt(v), "Revenue"]}
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(v: number) => [fmt(v), 'Revenue']}
+                    contentStyle={{
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
                   />
-                    <Bar dataKey="revenueValue" radius={[0, 4, 4, 0]} barSize={24}>
-                      {bottomProducts.map((_, index) => (
-                        <Cell key={`bot-${index}`} fill={index === 0 ? "#be123c" : index < 2 ? "#f43f5e" : "#fda4af"} />
-                      ))}
-                    </Bar>
+                  <Bar dataKey="revenueValue" radius={[0, 4, 4, 0]} barSize={24}>
+                    {bottomProducts.map((_, index) => (
+                      <Cell
+                        key={`bot-${index}`}
+                        fill={
+                          index === 0
+                            ? tokens.colors.danger
+                            : index < 2
+                              ? tokens.colors.dangerLight
+                              : tokens.colors.dangerLight
+                        }
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
