@@ -60,14 +60,3 @@ Design tokens & theming
 - Tailwind config: `frontend/tailwind.config.ts` maps CSS vars to utility colors.
 - Migration helper: `frontend/scripts/migrate-to-css-vars.js` can replace common hex literals with CSS variables.
 
-Developer workflow suggestions
-- Use the `pages -> components -> all` staged migration approach when replacing hardcoded values.
-- Add CI checks to run `npm run lint`, `npm run test`, and `mvn -q -DskipTests=false verify` on PRs.
-- Use `husky` + `lint-staged` for pre-commit formatting.
-
-Contributing
-- Create feature branches from `main` and open pull requests with meaningful titles and short descriptions of changes.
-- Add tests for non-trivial logic and update docs in `docs/` when changing API contracts or data models.
-
-Contact
-- For questions about the codebase or architecture, open an issue or ping the maintainer in the repo.
