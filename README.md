@@ -1,6 +1,18 @@
+
+
+
+
 # Inveflux
 
 Inveflux is a consumer analysis and inventory intelligence platform designed to help businesses make data-driven decisions through operational, inventory, financial, and vendor insights.
+
+---
+
+## 📷 Demo
+
+A short demo video showcasing the platform features is included in the repository.
+
+https://github.com/user-attachments/assets/f9f2c6be-a81f-4d16-b4ff-10af57a30638
 
 ---
 
@@ -100,11 +112,5 @@ To transform raw business data into actionable insights that help organizations:
 - Automated alerts and recommendations
 - Enhanced data upload capabilities
 - Real-time dashboards
-
----
-
-## 📷 Demo
-
-A short demo video showcasing the platform features is included in the repository.
 
 ---
