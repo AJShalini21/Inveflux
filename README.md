@@ -1,62 +1,110 @@
-# InveFlux
+# Inveflux
 
-InveFlux is a full-stack inventory & financial insights dashboard designed to help operations and finance teams monitor stock health, velocity, vendor risk, and financial performance.
+Inveflux is a consumer analysis and inventory intelligence platform designed to help businesses make data-driven decisions through operational, inventory, financial, and vendor insights.
 
-Key features
-- Real-time stock pulse and inventory health metrics
-- Inventory velocity and risk product tracking
-- Vendor performance and payables insights
-- Financial dashboards (revenue, margins, profit flows)
+---
 
-High level architecture
-- Backend: Java (Maven) Spring Boot service providing REST APIs (located in `backend/`).
-- Frontend: React + TypeScript app built with Vite (located in `frontend/`).
-- Database: migrations live under `backend/src/main/resources/db/migration`.
-- Docs and artifacts: `docs/` contains API design, ER diagrams and other references.
+## 🚀 Tech Stack
 
-Tech stack
-- Backend: Java, Spring Boot, Maven
-- Frontend: React, TypeScript, Vite, Tailwind CSS
-- Charts: Recharts
-- Testing: JUnit (backend), Vitest / Testing Library (recommended for frontend)
+### Backend
+- Java (Spring Boot)
+- REST APIs
+- JPA / Hibernate
+- PostgreSQL
 
-Quickstart
+### Database
+- PostgreSQL
+- Views for analytics
+- Optimized queries and indexing
 
-1) Backend (run from repo root)
+### Frontend
+- React.js
+- Modern UI design with reusable components
+- Data visualization libraries (charts & graphs)
 
-```bash
-cd backend
-# build
-mvn clean package
-# run (development)
-mvn spring-boot:run
-```
+### Data Processing
+- SQL-based analytics
+- Planned Python modules for advanced analytics
 
-2) Frontend
+---
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+## 📊 Features (Page-wise)
 
-Notes: the frontend expects the backend APIs to be available under `/api` or the configured base URL (see `frontend/src/app/services/*` for endpoints). Adjust proxy or environment variables as needed.
+### 1. Operational Insights
+- Overview of business performance
+- Key metrics for quick decision-making
+- Product movement tracking
+- Risk indicators:
+  - Low stock
+  - Overstock
+  - Out of stock
+- Visual summary for operational health
 
-Linting, formatting & quality
-- Frontend uses ESLint + Prettier. Run:
+---
 
-```bash
-cd frontend
-npm run lint
-npm run lint:fix
-npm run format
-```
+### 2. Inventory Insights
+- Inventory aging analysis
+- Identification of dead stock
+- Overstock detection
+- Stock distribution insights
+- Helps in optimizing inventory turnover and reducing holding costs
 
-- Backend: run `mvn verify` to run tests and checks.
+---
 
-Design tokens & theming
-- JS tokens: `frontend/src/styles/tokens.ts` — import these in components for consistent color/spacing.
-- CSS variables: `frontend/src/styles/theme.css` contains CSS custom properties mapped to tokens and tailwind.
-- Tailwind config: `frontend/tailwind.config.ts` maps CSS vars to utility colors.
-- Migration helper: `frontend/scripts/migrate-to-css-vars.js` can replace common hex literals with CSS variables.
+### 3. Financial Insights
+- Revenue tracking
+- Cost of Goods Sold (COGS)
+- Profitability analysis
+- Financial performance over time
+- Correlation between inventory and financial outcomes
 
+---
+
+### 4. Vendor Insights
+- Vendor performance evaluation
+- Supplier contribution analysis
+- Order pattern tracking
+- Helps identify reliable and high-performing vendors
+
+---
+
+### 5. Data Upload Section (In Progress)
+- Upload business datasets
+- Supports flexible data input for analysis
+- Will enable dynamic data integration into the system
+- 🚧 Currently under development
+
+---
+
+### 6. ER Diagram & Backend Design
+- Well-structured relational database
+- Normalized schema design
+- Analytical views for performance optimization
+- Efficient relationships for accurate insights
+
+---
+
+## 🎯 Project Goal
+
+To transform raw business data into actionable insights that help organizations:
+- Reduce inventory risks
+- Improve operational efficiency
+- Optimize vendor decisions
+- Increase overall profitability
+
+---
+
+## 📌 Future Enhancements
+
+- Advanced analytics using Python modules
+- Automated alerts and recommendations
+- Enhanced data upload capabilities
+- Real-time dashboards
+
+---
+
+## 📷 Demo
+
+A short demo video showcasing the platform features is included in the repository.
+
+---
